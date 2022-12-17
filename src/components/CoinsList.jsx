@@ -80,7 +80,7 @@ export const CoinsList = ({ rows, setRows }) => {
                   <AiOutlineStar size={20} />
                 </td>
                 <td className="hidden md:table-cell lg:table-cell xl-table-cell 2xl:table-cell px-4 py-4 text-sm font-medium">
-                  {(page - 1) * 10 + (i + 1)}
+                  {(page - 1) * rows + (i + 1)}
                 </td>
                 <td className="px-4 py-4 text-sm font-medium flex items-center">
                   <img

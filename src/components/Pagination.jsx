@@ -2,7 +2,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 export const Pagination = ({ page, setPage }) => {
   return (
-    <div className="flex items-center justify-between ml-auto border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
+    <div className="flex items-center justify-between md:ml-auto lg:ml-auto xl:ml-auto 2xl:ml-auto border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
       <ul className="flex flex-1 justify-between sm:hidden">
         <li
           onClick={() => setPage((p) => p - 1)}
