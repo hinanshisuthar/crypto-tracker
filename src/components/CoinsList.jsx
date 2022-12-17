@@ -6,7 +6,7 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { Popup } from "./Popup";
 import supplyBar from "../assets/Vector.png";
 
-export const CoinsList = ({ rows }) => {
+export const CoinsList = ({ rows, setRows }) => {
   const [page, setPage] = useState(1);
   const [popup, setPopup] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -16,7 +16,6 @@ export const CoinsList = ({ rows }) => {
       const res = await fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&amp;order=market_cap_desc&amp;per_page=${rows}&amp;page=${page}&amp;sparkline=false&amp;price_change_percentage=24h%2C7d`
       );
-      //   setCoinsData(res.data);
       return res.json();
     } catch (err) {
       return console.error(err);
@@ -125,7 +124,7 @@ export const CoinsList = ({ rows }) => {
                 <td className="hidden md:table-cell lg:table-cell xl-table-cell 2xl:table-cell px-4 py-4 text-sm font-medium">
                   {coin.total_supply}{" "}
                   <span className="uppercase font-lg">{coin.symbol}</span>
-                  <img src={supplyBar} alt="supply-bar-progress" />
+                  <img src={supplyBar} alt="supply-bar" />
                 </td>
                 <td className="hidden md:table-cell lg:table-cell xl-table-cell 2xl:table-cell px-4 py-4 text-sm font-medium">
                   <BiDotsVerticalRounded />
