@@ -7,7 +7,7 @@ import {
   import image1 from "../assets/Image (1).png";
   import image2 from "../assets/Image (2).png";
   
-  export const Main = ({ setRows }) => {
+  export const Main = ({ rows, setRows }) => {
     const cards = [
       {
         id: 0,
