@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { AiOutlineStar, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
@@ -8,7 +7,6 @@ import { Popup } from "./Popup";
 import supplyBar from "../assets/Vector.png";
 
 export const CoinsList = ({ rows, setRows }) => {
-  const [coinsData, setCoinsData] = useState([]);
   const [page, setPage] = useState(1);
   const [popup, setPopup] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -18,7 +16,6 @@ export const CoinsList = ({ rows, setRows }) => {
       const res = await fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&amp;order=market_cap_desc&amp;per_page=${rows}&amp;page=${page}&amp;sparkline=false&amp;price_change_percentage=24h%2C7d`
       );
-      //   setCoinsData(res.data);
       return res.json();
     } catch (err) {
       return console.error(err);
@@ -28,19 +25,6 @@ export const CoinsList = ({ rows, setRows }) => {
   useEffect(() => {}, []);
 
   const { data, status } = useQuery(["coins", page, rows], fetchData);
-
-  const coinsDatacell = [
-    "",
-    "#",
-    "Name",
-    "Price",
-    "24H",
-    "7D",
-    "Market Cap",
-    "Volume(24H)",
-    "Circulating Supply",
-    "",
-  ];
 
   const popupHandler = (coin) => {
     setPopup(true);
@@ -99,7 +83,7 @@ export const CoinsList = ({ rows, setRows }) => {
                   <img
                     src={coin.image}
                     className="w-5 h-5 m-1"
-                    alt="coin-image"
+                    alt="coin-crypto"
                   />
                   {coin.name}
                   <span className="text-gray-400 uppercase font-lg m-1">
@@ -182,13 +166,13 @@ export const CoinsList = ({ rows, setRows }) => {
                   <FiChevronLeft size={20} />
                 </button>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((page, i) => (
-                  <a
+                  <button
                     key={page + i}
                     className="rounded-lg relative z-10 inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-300"
                     onClick={() => setPage(page)}
                   >
                     {page}
-                  </a>
+                  </button>
                 ))}
                 <button
                   className="rounded-lg relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:z-20 disabled:bg-gray-400 disabled:text-white"
