@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useQuery } from "react-query";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { AiOutlineStar, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { Popup } from "./Popup";
 import supplyBar from "../assets/Vector.png";
+import { Pagination } from "./Pagination";
 
 export const CoinsList = ({ rows, setRows }) => {
+  const [coinsData, setCoinsData] = useState([]);
   const [page, setPage] = useState(1);
   const [popup, setPopup] = useState(false);
   const [modalData, setModalData] = useState(null);
 
   async function fetchData() {
     try {
-      const res = await fetch(
+      const res = await axios.get(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&amp;order=market_cap_desc&amp;per_page=${rows}&amp;page=${page}&amp;sparkline=false&amp;price_change_percentage=24h%2C7d`
       );
-      return res.json();
+      setCoinsData(res.data);
     } catch (err) {
       return console.error(err);
     }
@@ -24,7 +26,7 @@ export const CoinsList = ({ rows, setRows }) => {
 
   useEffect(() => {}, []);
 
-  const { data, status } = useQuery(["coins", page, rows], fetchData);
+  const { status } = useQuery(["coins", page, rows], fetchData);
 
   const popupHandler = (coin) => {
     setPopup(true);
@@ -35,7 +37,7 @@ export const CoinsList = ({ rows, setRows }) => {
     <div className="flex items-center justify-center flex-col">
       <table className="table-auto p-2">
         <thead>
-          <tr>
+          <tr className="border-t border-gray-200">
             <th className="px-6 py-3 text-xs font-bold text-center uppercase w-max"></th>
             <th className="hidden md:table-cell lg:table-cell xl-table-cell 2xl:table-cell px-6 py-3 text-xs font-bold text-center uppercase w-max">
               #
@@ -66,11 +68,12 @@ export const CoinsList = ({ rows, setRows }) => {
         </thead>
         <tbody>
           {status === "loading" && <span>Loading</span>}
+          {status === "error" && <span>Error Fetching Data</span>}
           {status === "success" &&
-            data.map((coin, i) => (
+            coinsData.map((coin, i) => (
               <tr
                 key={coin.id + i + coin.name}
-                className="px-1"
+                className="px-1 border-t border-gray-100"
                 onClick={() => popupHandler(coin)}
               >
                 <td className="px-4 py-4 text-sm font-medium">
@@ -136,56 +139,7 @@ export const CoinsList = ({ rows, setRows }) => {
           )}
         </tbody>
       </table>
-      <div>
-        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-          <ul className="flex flex-1 justify-between sm:hidden">
-            <li
-              onClick={() => setPage((p) => p - 1)}
-              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              <FiChevronLeft className="h-5 w-5" />
-            </li>
-            <li
-              onClick={() => setPage((p) => p + 1)}
-              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              <FiChevronRight className="h-5 w-5" />
-            </li>
-          </ul>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <ul
-                className="isolate inline-flex -space-x-px rounded-md shadow-sm gap-2"
-                aria-label="Pagination"
-              >
-                <button
-                  className="rounded-lg relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-3 border-gray-400 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:z-20 disabled:bg-gray-400 disabled:text-white"
-                  onClick={() => setPage((p) => p - 1)}
-                  disabled={page === 1}
-                >
-                  <FiChevronLeft size={20} />
-                </button>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((page, i) => (
-                  <button
-                    key={page + i}
-                    className="rounded-lg relative z-10 inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-300"
-                    onClick={() => setPage(page)}
-                  >
-                    {page}
-                  </button>
-                ))}
-                <button
-                  className="rounded-lg relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:z-20 disabled:bg-gray-400 disabled:text-white"
-                  onClick={() => setPage((p) => p + 1)}
-                  disabled={page === 10}
-                >
-                  <FiChevronRight size={20} />
-                </button>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Pagination setPage={setPage} page={page} />
     </div>
   );
 };
